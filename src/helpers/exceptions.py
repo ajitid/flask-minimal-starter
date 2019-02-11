@@ -1,6 +1,6 @@
 from flask import jsonify
 
-from .status import HTTP_400_BAD_REQUEST
+from .status_codes import HTTP_400_BAD_REQUEST
 
 
 class ApiException(Exception):
