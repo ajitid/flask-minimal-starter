@@ -14,7 +14,7 @@ app.register_error_handler(ApiException, lambda err: err.to_response())
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-login = LoginManager(app)
+login_manager = LoginManager(app)
 
 import models
 import routes

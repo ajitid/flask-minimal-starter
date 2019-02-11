@@ -1,8 +1,8 @@
 from flask import jsonify
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 from voluptuous import Schema, Required, REMOVE_EXTRA
 
-from app import app
+from app import app, login_manager
 from models.user import User
 from helpers.decorators import dataschema
 from helpers import status_codes
@@ -13,6 +13,11 @@ from helpers.fns import is_email
 @app.route("/")
 def index():
     return jsonify({"status": "All set!"})
+
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    raise ApiException("Not authenticated or authorized", status_codes.HTTP_401_UNAUTHORIZED)
 
 
 @app.route("/check-auth")
@@ -43,6 +48,8 @@ def logout():
     return "", status_codes.HTTP_204_NO_CONTENT
 
 
-@app.route("/")
+# TODO
+@app.route("/protected")
+@login_required
 def protected():
     return "yo"

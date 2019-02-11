@@ -1,4 +1,4 @@
-# Flask starter
+# Flask minimal starter
 
 Uses Pipenv
 

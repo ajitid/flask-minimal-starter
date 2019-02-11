@@ -20,6 +20,7 @@ flask-login = "*"
 flask-migrate = "*"
 bcrypt = "*"
 voluptuous = "*"
+flask-jwt-extended = "*"
 
 [requires]
 python_version = "3.7"
