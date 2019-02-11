@@ -1,0 +1,25 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[scripts]
+r = "flask run"
+m = "flask db migrate"
+u = "flask db upgrade"
+d = "flask db downgrade"
+s = "flask konch"
+
+[dev-packages]
+rope = "*"
+
+[packages]
+flask = "*"
+flask-sqlalchemy = "*"
+flask-login = "*"
+flask-migrate = "*"
+bcrypt = "*"
+voluptuous = "*"
+
+[requires]
+python_version = "3.7"
