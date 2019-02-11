@@ -70,8 +70,4 @@ def logout():
     return "", status_codes.HTTP_204_NO_CONTENT
 
 
-# TODO
-@app.route("/protected")
-@login_required
-def protected():
-    return "yo"
+# TODO signup, move this to blueprint
