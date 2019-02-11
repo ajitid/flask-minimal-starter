@@ -1,20 +1,18 @@
-from flask import Flask, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from flask_login import LoginManager
+from flask import Flask
+
+# from flask_jwt_extended import jwt_optional
 
 from config import Config
-from helpers.exceptions import ApiException
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-app.register_error_handler(ApiException, lambda err: err.to_response())
-
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-login_manager = LoginManager(app)
-
+import handlers
 import models
 import routes
+
+
+# @app.before_request
+# @jwt_optional
+# def before_request():
+#     pass

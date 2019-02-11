@@ -21,6 +21,7 @@ flask-migrate = "*"
 bcrypt = "*"
 voluptuous = "*"
 flask-jwt-extended = "*"
+blinker = "*"
 
 [requires]
 python_version = "3.7"

@@ -3,7 +3,7 @@ from uuid import uuid4
 from flask_login import UserMixin
 import bcrypt
 
-from app import db, login_manager
+from handlers.db import db
 
 
 def get_uuid():
@@ -33,8 +33,3 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return f"<User {self.username}>"
-
-
-@login_manager.user_loader
-def user_loader(id):
-    return User.query.get(id)
