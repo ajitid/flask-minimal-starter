@@ -4,11 +4,11 @@ from .status_codes import HTTP_400_BAD_REQUEST
 
 
 class ApiException(Exception):
-    def __init__(self, message, status=HTTP_400_BAD_REQUEST, payload=None):
+    def __init__(self, msg, status=HTTP_400_BAD_REQUEST, payload=None):
         super()
-        self.message = message
+        self.msg = msg
         self.status = status
         self.payload = payload
 
     def to_response(self):
-        return jsonify({"message": self.message, "payload": self.payload}), self.status
+        return jsonify({"msg": self.msg, "payload": self.payload}), self.status

@@ -1,24 +1,26 @@
-from flask import jsonify
+from flask import jsonify, Blueprint
 from flask_login import current_user, login_user, logout_user, login_required
-from voluptuous import Schema, Required, REMOVE_EXTRA, In
+from voluptuous import Schema, Required, REMOVE_EXTRA, In, All, Length, Email
 from flask_jwt_extended import create_access_token, get_jwt_identity, get_raw_jwt
+from sqlalchemy import or_
 
-
-from app import app
 from models.user import User
+from handlers.db import db
 from handlers.jwt import jwt_blacklist
 from helpers.decorators import dataschema
 from helpers import status_codes
 from helpers.exceptions import ApiException
 from helpers.fns import is_email
 
+mod = Blueprint("auth", __name__)
 
-@app.route("/")
+
+@mod.route("/")
 def index():
     return jsonify({"status": "All set!"})
 
 
-@app.route("/check-auth")
+@mod.route("/check-auth")
 def check_auth():
     if not current_user.is_authenticated:
         return jsonify({"authenticated": False})
@@ -26,16 +28,12 @@ def check_auth():
     return jsonify({"authenticated": True, "username": user.username})
 
 
-def get_user_from_username_or_email(username_or_email):
-    user = None
-    if is_email(username_or_email):
-        user = User.query.filter_by(email=username_or_email).first()
-    else:
-        user = User.query.filter_by(username=username_or_email).first()
+def get_user_from_username_or_email(username=None, email=None):
+    user = User.query.filter(or_(User.username == username, User.email == email)).first()
     return user
 
 
-@app.route("/login", methods=["POST"])
+@mod.route("/login", methods=["POST"])
 @dataschema(
     Schema(
         {
@@ -47,7 +45,11 @@ def get_user_from_username_or_email(username_or_email):
     )
 )
 def login(username_or_email, password, auth_type):
-    user = get_user_from_username_or_email(username_or_email)
+    user = None
+    if is_email(username_or_email):
+        user = get_user_from_username_or_email(email=username_or_email)
+    else:
+        user = get_user_from_username_or_email(username=username_or_email)
     if user is None or not User.match_password(user, password):
         raise ApiException("Invalid username or password", status_codes.HTTP_401_UNAUTHORIZED)
     if auth_type == "cookie":
@@ -59,7 +61,7 @@ def login(username_or_email, password, auth_type):
     raise ApiException("Authentication failed", status_codes.HTTP_401_UNAUTHORIZED)
 
 
-@app.route("/logout", methods=["POST"])
+@mod.route("/logout", methods=["POST"])
 @login_required
 def logout():
     if get_jwt_identity() is not None:
@@ -70,4 +72,30 @@ def logout():
     return "", status_codes.HTTP_204_NO_CONTENT
 
 
-# TODO signup, move this to blueprint
+@mod.route("/signup", methods=["POST"])
+@dataschema(
+    Schema(
+        {
+            Required("username"): All(str, Length(min=4)),
+            Required("email"): Email(),
+            Required("name"): All(str, Length(min=1)),
+            Required("password"): All(str, Length(min=6)),
+        },
+        extra=REMOVE_EXTRA,
+    )
+)
+def signup(username, email, name, password):
+    existing_user = get_user_from_username_or_email(username=username, email=email)
+    if existing_user:
+        if existing_user.username == username:
+            raise ApiException("This username is taken", status_codes.HTTP_409_CONFLICT)
+        elif existing_user.email == email:
+            raise ApiException("This email is already being used by another account", status_codes.HTTP_409_CONFLICT)
+    user = User.create_user(username=username, email=email, name=name, password=password)
+    db.session.add(user)
+    db.session.commit()
+    # FIXME db transaction fail 5xx error Flask global exception
+    return "", status_codes.HTTP_204_NO_CONTENT
+
+
+# TODO 404 as no content just status code

@@ -1,3 +1,4 @@
+from functools import update_wrapper
 from flask import request
 from voluptuous import Invalid
 
@@ -20,6 +21,6 @@ def dataschema(schema):
                 raise ApiException(f'Invalid data: {e.msg} (path "{path}")')
             return request_handler(*args, **kwargs)
 
-        return call_request_handler
+        return update_wrapper(call_request_handler, request_handler)
 
     return decorator
