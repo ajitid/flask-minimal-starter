@@ -5,8 +5,6 @@ from models.user import User
 
 jwt = JWTManager(app)
 
-# FIXME expire time of JWT and cookie-session, refresh token needed in JWT?
-
 # LATER for better way and perf, https://flask-jwt-extended.readthedocs.io/en/latest/blacklist_and_token_revoking.html
 jwt_blacklist = set()
 

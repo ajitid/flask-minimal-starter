@@ -1,0 +1,3 @@
+[tool.black]
+exclude = .git,__pycache__,migrations
+line-length = 119
