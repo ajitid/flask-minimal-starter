@@ -6,5 +6,8 @@ Uses Pipenv
 
 Setup `.env`
 
-TODO ^^^^^^^
-_(if you are seeing this, raise an issue about incomplete README.md)_
+## TODO
+
+- if you are seeing this, raise an issue about incomplete README.md
+- check static files serving
+- SSE (server sent event) for notification

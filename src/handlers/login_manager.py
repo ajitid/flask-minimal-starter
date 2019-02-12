@@ -52,7 +52,6 @@ def load_user_from_request(request):
     """
 
     # next, try to return user from JWT
-    # FIXME on fail, JWT lib gives back {"msg": "..."} and not {"message": "..."}
     user = jwt_get_current_user()
     if user:
         return user
