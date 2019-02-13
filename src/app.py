@@ -1,8 +1,8 @@
 from flask import Flask
 
-from config import Config
-
 app = Flask(__name__)
+
+from config import Config
 app.config.from_object(Config)
 
 import handlers

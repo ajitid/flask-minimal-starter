@@ -22,6 +22,7 @@ bcrypt = "*"
 voluptuous = "*"
 flask-jwt-extended = "*"
 blinker = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.7"

@@ -52,10 +52,10 @@ def login(username_or_email, password, auth_type):
         user = get_user_from_username_or_email(username=username_or_email)
     if user is None or not User.match_password(user, password):
         raise ApiException("Invalid username or password", status_codes.HTTP_401_UNAUTHORIZED)
-    if auth_type == "cookie":
+    if auth_type is "cookie":
         login_user(user)
         return "", status_codes.HTTP_204_NO_CONTENT
-    elif auth_type == "token":
+    elif auth_type is "token":
         token = create_access_token(identity=user.id)
         return jsonify({"access_token": token})
     raise ApiException("Authentication failed", status_codes.HTTP_401_UNAUTHORIZED)
@@ -96,6 +96,3 @@ def signup(username, email, name, password):
     db.session.commit()
     # FIXME db transaction fail 5xx error Flask global exception
     return "", status_codes.HTTP_204_NO_CONTENT
-
-
-# TODO 404 as no content just status code

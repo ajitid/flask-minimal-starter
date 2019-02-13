@@ -37,6 +37,15 @@ For production:
 _If you are seeing this, probably readme is not completely done yet, so raise an issue about incomplete `README.md` at its repo_
 
 - check static files serving
+- update sample dotenv in "Setup for usage"
 - expire time of JWT and cookie-session, provide refresh token in JWT?
+- if cross site cookies are bad so lean on JWT? or tell in Flask Login - docs
+- CORS| check for static assets as media assets can be requested with js
+- gzip, rate-limiting
 - haven't checked whether black and `exclude=` from pyproject.toml works or not
 - SSE (server sent event) for notification
+- flask konch - konch - bpython-curses
+- flask hot reload
+- flask channels
+- flask storages
+- fix poetry bug - removes common dependencies when a package is removed (if 2 packages are present and both have x as dependency, poetry has a bug by which when one package is removed it'll remove x too)
