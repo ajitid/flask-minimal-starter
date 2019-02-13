@@ -39,7 +39,7 @@ For production:
 
 ## TODO
 
-- Haven't checked whether Black formatter recognizes `exclude=` from `pyproject.toml`. That being said, Black and Flake8 are intentionally not added as dev dependencies, so removing `pyproject.toml` and `setup.cfg` won't be a problem.
+- Haven't checked whether Black formatter recognizes `exclude=` from `pyproject.toml`. That being said, Black and Flake8 are intentionally not added as dev dependencies, so removing `pyproject.toml` and `setup.cfg` won't be a problem. Same applies for `s = "flask konch"` in `scripts` of Pipfile.
 
 _Flask minimal starter, apart from adding tests, is complete. None of todos below are for this starter._
 
