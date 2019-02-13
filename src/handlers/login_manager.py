@@ -36,6 +36,13 @@ def load_user_from_request(request):
     user = jwt_get_current_user()
     if user:
         return user
+    """
+    Python 3.8 has walrus operator, which can simplify the code above add scope to user:
+    ```
+    if user := jwt_get_current_user():
+        return user
+    ```
+    """
 
     # finally, return None if both methods did not login the user
     return None
