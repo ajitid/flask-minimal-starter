@@ -1,6 +1,4 @@
-from flask import g
-from flask.sessions import SecureCookieSessionInterface
-from flask_login import LoginManager, user_loaded_from_header
+from flask_login import LoginManager
 from flask_jwt_extended import jwt_optional, get_current_user as jwt_get_current_user
 
 from app import app
@@ -19,23 +17,6 @@ def user_loader(id):
 @login_manager.unauthorized_handler
 def unauthorized():
     raise ApiException("Not authenticated or authorized", status_codes.HTTP_401_UNAUTHORIZED)
-
-
-class CustomSessionInterface(SecureCookieSessionInterface):
-    """Prevent creating session from API requests."""
-
-    def save_session(self, *args, **kwargs):
-        if g.get("login_via_header"):
-            return
-        return super(CustomSessionInterface, self).save_session(*args, **kwargs)
-
-
-app.session_interface = CustomSessionInterface()
-
-
-@user_loaded_from_header.connect
-def user_loaded_from_header(self, user=None):
-    g.login_via_header = True
 
 
 @login_manager.request_loader
