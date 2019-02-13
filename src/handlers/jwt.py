@@ -5,7 +5,9 @@ from models.user import User
 
 jwt = JWTManager(app)
 
-# LATER for better way and perf, https://flask-jwt-extended.readthedocs.io/en/latest/blacklist_and_token_revoking.html
+# LATER for better way and perf,
+# see https://flask-jwt-extended.readthedocs.io/en/latest/blacklist_and_token_revoking.html
+# and https://github.com/vimalloc/flask-jwt-extended/blob/master/examples/redis_blacklist.py
 jwt_blacklist = set()
 
 

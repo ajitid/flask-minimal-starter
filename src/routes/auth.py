@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import jsonify, Blueprint
 from flask_login import current_user, login_user, logout_user, login_required
 from voluptuous import Schema, Required, REMOVE_EXTRA, In, All, Length, Email
@@ -53,10 +54,10 @@ def login(username_or_email, password, auth_type):
     if user is None or not User.match_password(user, password):
         raise ApiException("Invalid username or password", status_codes.HTTP_401_UNAUTHORIZED)
     if auth_type is "cookie":
-        login_user(user)
+        login_user(user, remember=True)
         return "", status_codes.HTTP_204_NO_CONTENT
     elif auth_type is "token":
-        token = create_access_token(identity=user.id)
+        token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(days=365))
         return jsonify({"access_token": token})
     raise ApiException("Authentication failed", status_codes.HTTP_401_UNAUTHORIZED)
 
