@@ -39,9 +39,8 @@ For production:
 
 ## TODO
 
-_If you are seeing this, probably readme is not completely done yet, so raise an issue about incomplete `README.md` at its repo_
+_Flask minimal starter, apart from adding tests, is complete. None of todos below are for this starter._
 
-- https://flask-login.readthedocs.io/en/latest/#disabling-session-cookie-for-apis
 - haven't checked whether black and `exclude=` from pyproject.toml works or not
 - SSE (server sent event) for notification
 - flask konch - konch - bpython-curses
