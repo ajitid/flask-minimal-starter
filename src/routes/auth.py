@@ -2,7 +2,7 @@ from datetime import datetime
 from flask import jsonify, Blueprint
 from flask_login import current_user, login_user, logout_user, login_required
 from voluptuous import Schema, Required, REMOVE_EXTRA, In, All, Length, Email
-from flask_jwt_extended import create_access_token, get_jwt_identity, get_raw_jwt
+from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, get_raw_jwt, jwt_refresh_token_required
 from sqlalchemy import or_
 
 from models.user import User
@@ -34,6 +34,12 @@ def get_user_from_username_or_email(username=None, email=None):
     return user
 
 
+def get_jwt_tokens(identity):
+    access_token = create_access_token(identity=identity, expires_delta=datetime.timedelta(days=30))
+    refresh_token = create_refresh_token(identity=identity, expires_delta=datetime.timedelta(days=365))
+    return {"access_token": access_token, "refresh_token": refresh_token}
+
+
 @mod.route("/login", methods=["POST"])
 @dataschema(
     Schema(
@@ -57,9 +63,17 @@ def login(username_or_email, password, auth_type):
         login_user(user, remember=True)
         return "", status_codes.HTTP_204_NO_CONTENT
     elif auth_type is "token":
-        token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(days=365))
-        return jsonify({"access_token": token})
+        tokens = get_jwt_tokens(user.id)
+        return jsonify(tokens)
     raise ApiException("Authentication failed", status_codes.HTTP_401_UNAUTHORIZED)
+
+
+@mod.route('/token-refresh')
+@jwt_refresh_token_required
+def refresh_token():
+    user_id = get_jwt_identity()
+    tokens = get_jwt_tokens(user_id)
+    return jsonify(tokens)
 
 
 @mod.route("/logout", methods=["POST"])
