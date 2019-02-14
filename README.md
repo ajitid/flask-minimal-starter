@@ -19,7 +19,7 @@ CORS_API_ORIGINS=<https://somehost.com>
 
 > Apart from `FLASK_*` configs in dotenv, configs are loaded using src/config.py
 
-- Expiry time for both cookie-session and JWT refresh token is set to 365 days. To change JWT expiry time, [set expiry time dynamically](https://flask-jwt-extended.readthedocs.io/en/latest/changing_default_behavior.html#dynamic-token-expires-time). For cookie-session, refer to Flask Login docs. Both changes are needed to be done in src/routes/auth.py, `get_jwt_tokens` method for JWT and `login` method for cookie-sesison.
+- Expiry time for both cookie-session and JWT refresh token is set to 365 days. To change JWT expiry time, [set expiry time dynamically](https://flask-jwt-extended.readthedocs.io/en/latest/changing_default_behavior.html#dynamic-token-expires-time). For cookie-session, refer to Flask Login docs. Both changes are needed to be done in src/routes/auth.py, `get_jwt_tokens` method for JWT and `login` method for cookie-sesison. Also, read all comments at top (after all imports) of src/routes/auth.py.
 - Create tables using migrations `pipenv run flask db upgrade` (do `pipenv run flask db migrate` if needed)
 - Run using `pipenv run flask run`
 

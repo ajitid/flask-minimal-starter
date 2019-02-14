@@ -2,7 +2,8 @@ from datetime import datetime
 from flask import jsonify, Blueprint
 from flask_login import current_user, login_user, logout_user, login_required
 from voluptuous import Schema, Required, REMOVE_EXTRA, In, All, Length, Email
-from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, get_raw_jwt, jwt_refresh_token_required
+from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, get_raw_jwt, \
+    jwt_refresh_token_required
 from sqlalchemy import or_
 
 from models.user import User
@@ -12,6 +13,33 @@ from helpers.decorators import dataschema
 from helpers import status_codes
 from helpers.exceptions import ApiException
 from helpers.fns import is_email
+
+
+"""
+on why /logout and /token-refresh have POST method and not GET
+https://stackoverflow.com/a/14587231/7683365
+"""
+
+"""
+currently for JWT
+/logout doesn't blacklist refresh token
+/token-refresh doesn't blacklist access token
+
+from docs: Refresh tokens cannot access an endpoint that is protected with jwt_required() and
+access tokens cannot access and endpoint that is protected with jwt_refresh_token_required().
+
+if you need to fix this, one option can be to obtain respective missing token from JSON and then blacklist it
+
+on same note, logout from all devices for cookie-sessions can be achieved using
+https://flask-login.readthedocs.io/en/latest/#alternative-tokens
+for example, instead of only using user_id as session-id, using a combination of user_id and one-way hash of password
+"""
+
+"""
+in signup method, username is not checked to only include specific characters
+change this according to your needs in dataschema decorator of signup method
+"""
+
 
 mod = Blueprint("auth", __name__)
 
@@ -35,7 +63,8 @@ def get_user_from_username_or_email(username=None, email=None):
 
 
 def get_jwt_tokens(identity):
-    access_token = create_access_token(identity=identity, expires_delta=datetime.timedelta(days=30))
+    # as JWT don't have sliding mechanism built-in, so long expiry of access and refresh token is used instead
+    access_token = create_access_token(identity=identity, expires_delta=datetime.timedelta(days=270))
     refresh_token = create_refresh_token(identity=identity, expires_delta=datetime.timedelta(days=365))
     return {"access_token": access_token, "refresh_token": refresh_token}
 
@@ -68,10 +97,14 @@ def login(username_or_email, password, auth_type):
     raise ApiException("Authentication failed", status_codes.HTTP_401_UNAUTHORIZED)
 
 
-@mod.route('/token-refresh')
+@mod.route('/token-refresh', methods=["POST"])
 @jwt_refresh_token_required
 def refresh_token():
     user_id = get_jwt_identity()
+    if user_id is None:
+        raise ApiException("Token generation failed", status_codes.HTTP_401_UNAUTHORIZED)
+    jti = get_raw_jwt()["jti"]
+    jwt_blacklist.add(jti)
     tokens = get_jwt_tokens(user_id)
     return jsonify(tokens)
 
@@ -91,9 +124,9 @@ def logout():
 @dataschema(
     Schema(
         {
-            Required("username"): All(str, Length(min=4)),
+            Required("username"): All(str, Length(min=3)),
             Required("email"): Email(),
-            Required("name"): All(str, Length(min=1)),
+            Required("name"): All(str, Length(min=2)),
             Required("password"): All(str, Length(min=6)),
         },
         extra=REMOVE_EXTRA,
