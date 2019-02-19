@@ -2,7 +2,7 @@
 
 Uses Pipenv
 
-_(If you know about Poetry then) preferably use Poetry over Pipenv. If at the time of reading Poetry isn't able to detect dotenv, then you may need to install python-dotenv and load `.env` file properties in src/config.py using this library._
+_(If you know about Poetry then) preferably use Poetry over Pipenv. If at the time of reading Poetry isn't able to detect dotenv, then you may need to install python-dotenv and load `.env` file properties at top of src/config.py using this library._
 
 ## Setup for usage
 
