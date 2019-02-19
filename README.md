@@ -46,8 +46,6 @@ For production:
 _Flask minimal starter, apart from adding tests, is complete. None of todos below are for this starter._
 
 - SSE (server sent event) for notification
-- flask konch - konch - bpython-curses
 - flask hot reload
 - flask channels
 - flask storages
-- fix poetry bug - removes common dependencies when a package is removed (if 2 packages are present and both have x as dependency, poetry has a bug by which when one package is removed it'll remove x too)
