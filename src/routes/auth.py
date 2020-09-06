@@ -26,7 +26,7 @@ currently for JWT
 /token-refresh doesn't blacklist access token
 
 from docs: Refresh tokens cannot access an endpoint that is protected with jwt_required() and
-access tokens cannot access and endpoint that is protected with jwt_refresh_token_required().
+access tokens cannot access an endpoint that is protected with jwt_refresh_token_required().
 
 if you need to fix this, one option can be to obtain respective missing token from JSON and then blacklist it
 
