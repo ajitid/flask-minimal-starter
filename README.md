@@ -35,7 +35,7 @@ For production:
 - Change `CORS_API_ORIGINS` if needed (don't set it to `*` as CSRF ain't used for cookie-session and so it is relying on CORS instead)
 - Add error logging at src/handlers/error_handlers.py for 500 HTTP status
 - Add GZip, rate-limiting
-- Use Redis or other performant backend for JWT token blacklisting. For this, refer to bottom of the page [Blacklist And Token Revoking](https://flask-jwt-extended.readthedocs.io/en/latest/blacklist_and_token_revoking.html) and modify code at src/handlers/jwt.py accordingly
+- Use Redis or other performant backend for JWT token blacklisting. For this, refer to bottom of the page [Blacklist And Token Revoking](https://flask-jwt-extended.readthedocs.io/en/3.0.0_release/blacklist_and_token_revoking/) and modify code at src/handlers/jwt.py accordingly
 
 > Functionality of revoking JWT tokens is achieved by adding them to blacklist
 
